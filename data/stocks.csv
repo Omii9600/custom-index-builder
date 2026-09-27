@@ -1,0 +1,31 @@
+ticker,company_name,sector,free_float_shares_mn
+NOVA,Nova Systems,Technology,224
+QBIT,Qubit Labs,Technology,1559
+CLDX,Cloudex Networks,Technology,1326
+SYNP,Synapse Software,Technology,905
+PIXL,Pixel Forge,Technology,894
+ARKB,Ark Bank,Financials,1724
+LEDG,Ledger Capital,Financials,217
+SHLD,Shield Insurance,Financials,1409
+VALT,Vault Payments,Financials,442
+CRST,Crest Asset Management,Financials,233
+CURA,Cura Pharma,Healthcare,1076
+GENX,GenX Biotech,Healthcare,1952
+MEDL,Medline Devices,Healthcare,1484
+VITA,Vita Hospitals,Healthcare,1534
+HELX,Helix Diagnostics,Healthcare,1449
+SOLR,Solar Grid,Energy,1582
+PTRO,Petro Nova,Energy,1050
+WNDX,Windex Power,Energy,299
+HYDR,Hydra Utilities,Energy,1687
+VOLT,Volt Storage,Energy,928
+BRWS,Brew & Co,Consumer,1025
+URBN,Urban Threads,Consumer,773
+FRSH,Fresh Mart,Consumer,405
+GLOW,Glow Cosmetics,Consumer,1857
+TRVL,Travelo,Consumer,1574
+STLX,Steelux,Industrials,1305
+CNST,Constructa,Industrials,834
+RAIL,Railway Corp,Industrials,1654
+AERO,Aero Dynamics,Industrials,1113
+FRGT,Freight Logistics,Industrials,914
