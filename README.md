@@ -351,7 +351,7 @@ Before any maths happens, the app checks your choices. If anything is wrong, it 
 | No stock selected twice | "A stock was selected more than once." |
 | Every ticker exists | "Unknown ticker(s): XYZ." |
 | Weighting method is valid | "Weighting method must be one of: ..." |
-| Both dates given and readable | "Choose both a start date and an end date." |
+| Both dates given, in `YYYY-MM-DD` format | "Start and end dates must be valid dates (YYYY-MM-DD)." An ambiguous date like `01/02/2024` is refused rather than guessed. |
 | Start is before end | "Start date must be before end date." |
 | Dates are inside the available data | "Dates must be within the available data: 2024-01-01 to 2025-12-31." |
 | Base level is a positive number | "Base level must be a positive number." |
@@ -540,7 +540,7 @@ A quick note on naming: a name that starts with an underscore, like `_load_price
 |---|---|
 | `validate(payload, report)` | Runs every check below and returns an `IndexRequest`, or stops with all errors listed. |
 | `_tickers(...)` | At least one stock, no duplicates, all real tickers. |
-| `_dates(...)` | Dates are readable, start before end, and within the data. |
+| `_dates(...)` | Dates are in `YYYY-MM-DD` format, start before end, and within the data. |
 | `_cap(...)` | Cap is between 0 and 100, and cap × number of stocks is at least 100%. |
 | `_custom_weights(...)` | Every stock has a weight, none negative, total is 100%. Warns about 0% weights. |
 
@@ -586,6 +586,7 @@ A quick note on naming: a name that starts with an underscore, like `_load_price
 | `annualised_return()` | Equivalent steady yearly growth. |
 | `annualised_volatility()` | How bumpy the ride was, per year. |
 | `sharpe_ratio()` | Return per unit of risk. Returns "not a number" if volatility is zero, to avoid dividing by zero. |
+| `_clean(value)` | Turns any "not a number" result into an empty value, because the data format sent to the browser (JSON) has no way to write "not a number". |
 | `max_drawdown()` | Worst fall from a high point. |
 | `summary()` | All of the above, plus best and worst day, in one package for the browser. |
 
@@ -670,6 +671,8 @@ The tests live in `tests/test_index_builder.py` and use Python's built-in `unitt
 | `test_generates_index` | A full run on the real data works and starts at 100. |
 | `test_rejects_bad_custom_weights` | Weights that don't add up to 100% are refused. |
 | `test_rejects_reversed_dates` | A start date after the end date is refused. |
+| `test_two_day_range_returns_valid_json` | With only one daily return, volatility can't be calculated. It is sent as "empty" (shown as "-"), never as NaN, which browsers can't read. |
+| `test_rejects_ambiguous_date_format` | A date like `01/02/2024` is refused. |
 | `test_rejects_impossible_cap` | A cap that can't work with the chosen stocks is refused. |
 
 ---
@@ -687,6 +690,7 @@ I built the project in small steps, each saved as a **commit** with a message sa
 | `feature/web-ui` | The Flask server and the web page |
 | `feature/tests` | Automated tests |
 | `docs/readme-rewrite` | This README |
+| `fix/edge-cases` | Fixed two edge cases found while testing: a 2-day range and ambiguous date formats |
 
 Merges use `--no-ff` so each merge is clearly visible in the history. To see it:
 
