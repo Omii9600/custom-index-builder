@@ -13,6 +13,7 @@ const state = { stocks: [], selected: new Set(), custom: {}, activeSectors: new 
 const $ = (id) => document.getElementById(id);
 const pct = (x, dp = 2) => (x == null || isNaN(x) ? "-" : `${(x * 100).toFixed(dp)}%`);
 const signed = (x, dp = 2) => (x > 0 ? "+" : "") + pct(x, dp);
+const num = (x, dp = 2) => (x == null || isNaN(x) ? "-" : x.toFixed(dp));
 const tone = (x) => (x > 0 ? "up" : x < 0 ? "down" : "");
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
@@ -199,7 +200,7 @@ function renderMetrics(m, b, benchLabel) {
     ["Cumulative return", signed(m.cumulative_return), signed(b.cumulative_return)],
     ["Annualised return", signed(m.annualised_return), signed(b.annualised_return)],
     ["Annualised volatility", pct(m.annualised_volatility), pct(b.annualised_volatility)],
-    ["Sharpe ratio (rf = 0)", m.sharpe_ratio.toFixed(2), b.sharpe_ratio.toFixed(2)],
+    ["Sharpe ratio (rf = 0)", num(m.sharpe_ratio), num(b.sharpe_ratio)],
     ["Max drawdown", pct(m.max_drawdown), pct(b.max_drawdown)],
     ["Best day", `${signed(m.best_day.return)} (${m.best_day.date})`, signed(b.best_day.return)],
     ["Worst day", `${signed(m.worst_day.return)} (${m.worst_day.date})`, signed(b.worst_day.return)],

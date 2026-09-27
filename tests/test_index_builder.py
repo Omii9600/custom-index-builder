@@ -1,4 +1,5 @@
 """Run with:  python -m unittest discover tests -v"""
+import json
 import unittest
 from pathlib import Path
 
@@ -91,6 +92,16 @@ class TestEndToEnd(unittest.TestCase):
     def test_rejects_reversed_dates(self):
         with self.assertRaises(IndexValidationError):
             self.builder.build(self.payload(start_date="2025-01-01", end_date="2024-01-01"))
+
+    def test_two_day_range_returns_valid_json(self):
+        # One daily return -> volatility can't be calculated. It must come back as None, never NaN.
+        result = self.builder.build(self.payload(start_date="2024-01-01", end_date="2024-01-02"))
+        self.assertIsNone(result["metrics"]["annualised_volatility"])
+        json.dumps(result, allow_nan=False)      # raises if any NaN slipped through
+
+    def test_rejects_ambiguous_date_format(self):
+        with self.assertRaises(IndexValidationError):
+            self.builder.build(self.payload(start_date="01/02/2024"))
 
     def test_rejects_impossible_cap(self):
         with self.assertRaises(IndexValidationError):

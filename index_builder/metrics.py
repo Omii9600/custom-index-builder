@@ -29,16 +29,23 @@ class PerformanceMetrics:
         """Largest peak-to-trough fall, e.g. -0.15 = the index once fell 15% from a high."""
         return (self._levels / self._levels.cummax() - 1).min()
 
+    @staticmethod
+    def _clean(value):
+        """JSON has no NaN. A metric that can't be calculated (e.g. volatility from a
+        single daily return) is sent as None, which the page shows as "-"."""
+        value = float(value)
+        return value if np.isfinite(value) else None
+
     def summary(self):
         best, worst = self._returns.idxmax(), self._returns.idxmin()
         return {
             "start_level": float(self._levels.iloc[0]),
             "end_level": float(self._levels.iloc[-1]),
-            "cumulative_return": float(self.cumulative_return()),
-            "annualised_return": float(self.annualised_return()),
-            "annualised_volatility": float(self.annualised_volatility()),
-            "sharpe_ratio": float(self.sharpe_ratio()),
-            "max_drawdown": float(self.max_drawdown()),
+            "cumulative_return": self._clean(self.cumulative_return()),
+            "annualised_return": self._clean(self.annualised_return()),
+            "annualised_volatility": self._clean(self.annualised_volatility()),
+            "sharpe_ratio": self._clean(self.sharpe_ratio()),
+            "max_drawdown": self._clean(self.max_drawdown()),
             "best_day": {"date": f"{best:%Y-%m-%d}", "return": float(self._returns[best])},
             "worst_day": {"date": f"{worst:%Y-%m-%d}", "return": float(self._returns[worst])},
             "trading_days": int(len(self._levels)),

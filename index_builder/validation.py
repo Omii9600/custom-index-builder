@@ -105,7 +105,9 @@ class RequestValidator:
 
     def _dates(self, start, end, report):
         try:
-            start, end = pd.Timestamp(start), pd.Timestamp(end)
+            # Strict format, so an ambiguous date like 01/02/2024 is rejected, not guessed.
+            start = pd.to_datetime(start, format="%Y-%m-%d")
+            end = pd.to_datetime(end, format="%Y-%m-%d")
         except (TypeError, ValueError):
             report.error("Start and end dates must be valid dates (YYYY-MM-DD).")
             return None, None
