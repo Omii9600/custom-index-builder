@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Custom Index Builder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<header class="topbar">
+  <h1>Custom Index Builder</h1>
+  <p>Build a price return index from a 30-stock universe and see how it would have performed.</p>
+</header>
+
+<main class="layout">
+  <!-- ============ LEFT: the builder (a real 3-step sequence) ============ -->
+  <form class="builder" id="builder" novalidate>
+    <section class="step">
+      <h2><span class="step-no">1</span> Choose stocks</h2>
+      <input type="search" id="search" placeholder="Search ticker or company" aria-label="Search stocks">
+      <div class="sector-chips" id="sectorChips" aria-label="Select a whole sector"></div>
+      <div class="list-actions">
+        <span id="selectedCount">0 of 30 selected</span>
+        <button type="button" class="link" id="selectAll">Select all</button>
+        <button type="button" class="link" id="clearAll">Clear</button>
+      </div>
+      <ul class="stock-list" id="stockList"></ul>
+    </section>
+
+    <section class="step">
+      <h2><span class="step-no">2</span> Choose weighting</h2>
+      <div class="methods" id="methods"></div>
+      <label class="inline-field" id="capField" hidden>
+        Maximum weight per stock
+        <span><input type="number" id="cap" value="20" min="1" max="100" step="1"> %</span>
+      </label>
+      <div id="customBox" hidden>
+        <div class="custom-head">
+          <span>Weights must add up to 100%</span>
+          <button type="button" class="link" id="splitEvenly">Split evenly</button>
+        </div>
+        <ul class="custom-list" id="customList"></ul>
+        <p class="custom-total" id="customTotal"></p>
+      </div>
+    </section>
+
+    <section class="step">
+      <h2><span class="step-no">3</span> Choose period</h2>
+      <div class="dates">
+        <label>Start date <input type="date" id="startDate"></label>
+        <label>End date <input type="date" id="endDate"></label>
+      </div>
+      <label class="inline-field">Base level <input type="number" id="baseLevel" value="100" min="1" step="1"></label>
+    </section>
+
+    <button type="submit" class="generate" id="generate">Generate index</button>
+  </form>
+
+  <!-- ============ RIGHT: results ============ -->
+  <section class="results" aria-live="polite">
+    <div class="empty" id="emptyState">
+      <p>Pick your stocks, a weighting method and a period, then select <strong>Generate index</strong>.</p>
+      <p class="hint">Tip: include VOLT, GLOW, PTRO or FRSH to see how the app handles missing data.</p>
+    </div>
+
+    <div id="messages"></div>
+
+    <div id="output" hidden>
+      <div class="headline">
+        <div>
+          <p class="headline-label" id="headlineLabel"></p>
+          <p class="level" id="endLevel"></p>
+        </div>
+        <dl class="headline-stats">
+          <div><dt>Cumulative return</dt><dd id="cumReturn"></dd></div>
+          <div><dt>Versus benchmark</dt><dd id="excess"></dd></div>
+        </dl>
+      </div>
+
+      <div class="panel chart-panel">
+        <canvas id="chart" aria-label="Index level over time"></canvas>
+      </div>
+
+      <div class="grid-2">
+        <div class="panel">
+          <h3>Performance</h3>
+          <table class="metrics" id="metricsTable"></table>
+        </div>
+        <div class="panel">
+          <h3>Sector mix</h3>
+          <div class="sector-bar" id="sectorBar"></div>
+          <ul class="sector-legend" id="sectorLegend"></ul>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h3>Constituents</h3>
+          <button type="button" class="secondary" id="download">Download CSV</button>
+        </div>
+        <p class="note">Contribution shows how many percentage points each stock added to the index return. They add up to the cumulative return.</p>
+        <div class="table-wrap"><table class="constituents" id="constituents"></table></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
