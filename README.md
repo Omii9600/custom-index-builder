@@ -60,7 +60,7 @@ This README explains everything from the ground up. You don't need a finance or 
 
 ```bash
 # 1. Get the code
-git clone <your-repo-url>
+git clone <https://github.com/Omii9600/custom-index-builder>
 cd custom-index-builder
 
 # 2. Create a private space for this project's libraries (optional but recommended)
@@ -72,7 +72,7 @@ pip install -r requirements.txt
 
 # 4. Start the app
 python app.py
-```
+``
 
 Now open **http://127.0.0.1:5000** in your web browser.
 
